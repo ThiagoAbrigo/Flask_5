@@ -14,10 +14,12 @@ def create_app():
     with app.app_context():
         from routes.api import api
         from routes.api_person import api_person
-        # from routes.api_censu import api_censu
+        from routes.api_motive import api_motive
+        from routes.api_censu import api_censu
         app.register_blueprint(api)
         app.register_blueprint(api_person)
-        # app.register_blueprint(api_censu)
+        app.register_blueprint(api_motive)
+        app.register_blueprint(api_censu)
         #create table bd
         db.create_all()
         #db.drop_all()

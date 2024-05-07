@@ -3,20 +3,18 @@ import uuid
 
 class Censu(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    status = db.Column(db.String(50))
+    status = db.Column(db.Boolean, default=True)
     startdate = db.Column(db.Date)
     enddate = db.Column(db.Date)
     motive = db.Column(db.String(50))
+    external_id = db.Column(db.VARCHAR(60), default=str(uuid.uuid4()))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
-    external_id = db.Column(db.VARCHAR(60), default=str(uuid.uuid4()))
-    
-    person_censu =  db.relationship('PersonCensu', backref='censu', lazy=True)
     
     @property
     def serialize(self):
         return {
-            'status': self.status,
+            "status": 1 if self.status else 0,
             'startdate': self.startdate,
             'enddate': self.enddate,
             'motive': self.motive,

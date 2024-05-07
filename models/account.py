@@ -11,6 +11,7 @@ class Account(db.Model):
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'), nullable=False, unique=True)
     
+    # def copy(self, value):
     
     @property
     def serialize(self):
@@ -19,4 +20,9 @@ class Account(db.Model):
             'status': 1 if self.status else 0,
             'external_id': self.external_id,
         } 
+        
+    def getPerson(self, id_p):
+        print("Recibir: ", id_p)
+        from models.person import Person
+        return Person.query.filter_by(id=id_p).first()
     

@@ -9,13 +9,11 @@ censuC = CensuController()
 schema = {
     'type': 'object',
     'properties': {
-        'name': {'type': 'string'},
-        'lastname': {'type': 'string'},
-        'age': {'type': 'string'},
-        'status': {'type': 'string'},
-        'rol_id': {'type': 'integer'},
+        'startdate': {'type': 'string'},
+        'enddate': {'type': 'string'},
+        'motive': {'type': 'string'},
     },
-    'required': ['name', 'lastname', 'age', 'status']
+    'required': ['startdate', 'enddate', 'motive']
 }
 
 #API for censu
@@ -23,7 +21,7 @@ schema = {
 def list():
     census = censuC.listCensu()
     return make_response(
-        jsonify({"msg":"OK", "code":200, "data":([censu.serialize() for censu in census])}),
+        jsonify({"msg":"OK", "code":200, "data":([i.serialize for i in censuC.listCensu()])}),
         200
     )
     
@@ -42,11 +40,10 @@ def search_external(external):
             )
     
 @api_censu.route('/censu/save', methods=["POST"])
-# @expects_json(schema)
-def create():
+@expects_json(schema)
+def create_censu():
     data = request.json
     censu = censuC.save_censu(data)
-
     if censu:
         return make_response(
             jsonify({"msg":"OK", "code":200, "data": {"tag":"saved data"}}),

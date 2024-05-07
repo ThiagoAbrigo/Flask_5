@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, make_response, request
 #problem relations
 
 # from models.personcensu import PersonCensu
-from models.catalogue import Catalogue
+# from models.motive import Catalogue
 # from models.motivecensu import MotiveCensu
 # from models.person import Person
 api = Blueprint('api', __name__)

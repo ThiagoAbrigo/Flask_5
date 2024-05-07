@@ -8,11 +8,15 @@ class config:
     #genaral configuration
     FLASK_APP = environ.get('FLASK_APP')
     FLASK_ENV = environ.get('FLASK_ENV')
+    
     #bd configuration
     user= environ.get("MYSQL_USER")
     password = environ.get("MYSQL_PASSWORD")
     host = environ.get("MYSQL_HOST")
     db = environ.get("MYSQL_DATABASE")
+    
+    SECRET_KEY = environ.get("SECRET_KEY")
+    
     #SQLAlchemy configuration
     SQLALCHEMY_DATABASE_URI = f'mysql://{user}:{password}@{host}/{db}'
     SQLALCHEMY_ECHO = True

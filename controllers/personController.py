@@ -3,6 +3,9 @@ from models.rol import Rol
 from models.account import Account
 from app import db
 import uuid
+import jwt
+from datetime import datetime, timedelta
+from flask import current_app
 
 class PersonController:
     def listPerson(self):
@@ -25,7 +28,7 @@ class PersonController:
         
     def save_censador(self, data):
         person = Person()
-        rol = Rol.query.filter_by(name='Cens').first()
+        rol = Rol.query.filter_by(name='Admin').first()
         if rol:
             accounts = Account.query.filter_by(email = data["email"]).first()
             if accounts:
@@ -90,3 +93,31 @@ class PersonController:
             return True
         else:
             return False
+    
+    #use AccountController
+    def login(self, data):
+        accountA = Account.query.filter_by(email=data["email"]).first()
+        if accountA:
+            #decrypt password
+            if accountA.password == data["password"]:
+                expire_time = datetime.now() + timedelta(minutes=30)
+                token_payload = {
+                    "external_id": accountA.external_id,
+                    "expire": expire_time.strftime("%Y-%m-%d %H:%M:%S") 
+                }
+                print('-------------', token_payload)
+                token = jwt.encode(
+                    token_payload,
+                    key=current_app.config["SECRET_KEY"],
+                    algorithm="HS512"
+                )    
+                person = accountA.getPerson(accountA.person_id)
+                user_info = {
+                    "token": token,
+                    "user": person.lastname + " " + person.name
+                }
+                return user_info
+            else:
+                -6
+        else:
+            return -6
