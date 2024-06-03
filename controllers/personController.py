@@ -4,7 +4,7 @@ from models.account import Account
 from app import db
 import uuid
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from flask import current_app
 
 class PersonController:
@@ -100,17 +100,18 @@ class PersonController:
         if accountA:
             #decrypt password
             if accountA.password == data["password"]:
-                expire_time = datetime.now() + timedelta(minutes=30)
                 token_payload = {
                     "external_id": accountA.external_id,
-                    "expire": expire_time.strftime("%Y-%m-%d %H:%M:%S") 
+                    "expire": (datetime.now(timezone.utc) + timedelta(minutes=60)).isoformat()
                 }
                 print('-------------', token_payload)
                 token = jwt.encode(
                     token_payload,
                     key=current_app.config["SECRET_KEY"],
                     algorithm="HS512"
-                )    
+                )
+                account = Account()
+                account.copy(accountA)    
                 person = accountA.getPerson(accountA.person_id)
                 user_info = {
                     "token": token,

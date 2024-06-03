@@ -1,6 +1,6 @@
 from app import db
 import uuid
-
+from datetime import datetime
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     email = db.Column(db.String(150), unique=True)
@@ -26,3 +26,12 @@ class Account(db.Model):
         from models.person import Person
         return Person.query.filter_by(id=id_p).first()
     
+    def copy(self, value):
+        self.email = value.email
+        self.status = value.status
+        self.password = value.password
+        self.id = value.id
+        self.external_id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+        return self

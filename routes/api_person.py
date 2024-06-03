@@ -46,7 +46,7 @@ schema_session = {
 
 # API for person
 @api_person.route("/person", methods=["GET"])
-@token_requeird
+# @token_requeird
 def list():
     # persons = personC.listPerson()
     return make_response(
@@ -147,19 +147,19 @@ def delete_person(external_id):
         )
 
 
-@api_person.route("/session", methods=["POST"])
-@expects_json(schema_session)
+# API para iniciar sesion
+@api_person.route("/session", methods=['POST'])
 def session():
     data = request.json
     id = personC.login(data)
-    if (type(id)) == int:
+
+    if type(id) == int:
         return make_response(
-            jsonify(
-                {"msg": "ERROR", "code": 400, "data": {"error": Errors.error[str(id)]}}
-            ),
-            400,
+            jsonify({"msg" : "ERROR", "code" : 400, "datos" :{"error" : Errors.error.get(str(id))}}), 
+            400
         )
     else:
         return make_response(
-            jsonify({"msg": "OK", "code": 200, "data": {"tag": id}}), 200
+            jsonify({"msg": "OK", "code": 200, "datos": id}),
+            200
         )

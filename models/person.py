@@ -14,6 +14,16 @@ class Person(db.Model):
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
     
     account = db.relationship('Account', backref='person', lazy=True)
+    
+    @property
+    def serialize(self):
+        return {
+            'name': self.name,
+            'lastname': self.lastname,
+            'age': self.age,
+            'civilstatus': 1 if self.civilstatus else 0,
+            'external_id': self.external_id,
+        } 
         
     
     
